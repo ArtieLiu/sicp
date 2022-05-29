@@ -1,0 +1,36 @@
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+    guess
+    (sqrt-iter (improve guess x)
+               x)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+
+
+
+; if previous root and current root is pretty close, stop the computation
+(define (good-enough-by-ratio? previous current)
+  (and (> (/ previous current) 0.9) 
+       (< (/ previous current) 1.1)))
+
+(define (sqrt-iter guess x)
+  (if (good-enough-by-ratio? guess (improve guess x))
+    guess
+    (sqrt-iter (improve guess x)
+               x)))
+
+
+
+(sqrt-iter 0.1 0.001)
+(good-enough-by-ratio? 0.1 (improve 0.1 2))
+(improve 0.1 2)
+
+(+ 1 100)
