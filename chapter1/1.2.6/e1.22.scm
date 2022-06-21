@@ -1,11 +1,11 @@
 (define (timed-prime-test n)
   (newline)
   (display n)
-  (start-prime-test n (real-time-clock)))
+  (start-prime-test n (runtime)))
 
 (define (start-prime-test n start-time)
   (if (prime? n)
-    (report-prime (- (real-time-clock) start-time))))
+    (report-prime (- (runtime) start-time))))
 
 (define (report-prime elapsed-time)
   (display " *** ")
@@ -39,10 +39,11 @@
 
 ; ----------- find prime numbers in a list of consecutive odd numbers -----------
 
-(define (find-odd-numbers start end t)
+(define (find-prime-between start end)
+  (timed-prime-test start)
   (if (< start end)
     (if (odd? start)
-      (find-odd-numbers (+ start 1) end (timed-prime-test start)) 
-      (find-odd-numbers (+ start 1) end 0))))
+      (find-prime-between (+ start 2) end) 
+      (find-prime-between (+ start 1) end))))
 
-(find-odd-numbers 1000 2000 0)
+(find-prime-between 1000000 1001000)
