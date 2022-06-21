@@ -5,4 +5,4 @@
 
 (define (square x) (* x x))
 
-(fast-expt 2 )
+(fast-expt 2 3)
