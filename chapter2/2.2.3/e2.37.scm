@@ -30,51 +30,29 @@
             (4 5 6 6) 
             (6 7 8 9)))
 
-(matrix-*-vector m vector)
-; -----------------------------------
+(matrix-*-vector m vector) ;returns (30 56 80)
+
+; ------------- transpose ---------------------
 (define (transpose mat)
   (accumulate-n cons '() mat))
-(transpose m)
 
-; ------------------------
+; ------------- matrix matrix product ----------
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
-    (map (lambda (v1 v2) 
-           (total (map * v1 v2)))
-         m
+    (map (lambda (v)
+           (matrix-*-vector m v)) 
          cols)))
-(matrix-*-matrix m n)
 
-(define n '((1 2 3 4) 
+(define m '((1 2 3 4) 
             (4 5 6 6) 
             (6 7 8 9)))
 
-(lambda (v1 v2)
-  (map * v1 v2))
-'((1 2 3 4) '((1 4 6) 
-  (4 5 6 6)   (2 5 7) 
-  (6 7 8 9))  (3 6 8) 
-              (4 6 9))
+(define n '((1 4 6) 
+            (2 5 7) 
+            (3 6 8) 
+            (4 6 9)))
 
-
-
-'((1 4 6) '((1 2 3 4) 
-  (2 5 7)   (4 5 6 6) 
-  (3 6 8)   (6 7 8 9))
-  (4 6 9))
-
-(define (total v)
-  (if (null? v)
-    0
-    (+ (car v)
-       (total (cdr v)))))
-(total '(1 2))
-
-(map (lambda (v1 v2)
-       (total v1)) m m)
-
-(define (matrix-*-matrix m n)
-  (let ((cols (transpose n)))
-    (map (lambda (v1 cols) 
-           ())
-         m)))
+(matrix-*-matrix m n)
+; returns '((30 56 80) 
+;           (56 113 161) 
+;           (80 161 230))
