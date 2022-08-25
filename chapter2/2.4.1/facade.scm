@@ -2,23 +2,28 @@
 (load "polar.scm")
 
 (define (real-part z)
-  (cond ((eq? 'rectangular (type? z)) (real-part-rect z))
-	((eq? 'polar (type? z)) (real-part-polar z))))
+  (apply-generic 'real-part z))
 
 (define (imag-part z)
-  (cond ((eq? 'rectangular (type? z)) (imag-part-rect z))
-	((eq? 'polar (type? z)) (imag-part-polar z))))
+  (apply-generic 'imag-part z))
 
 (define (angle z)
-  (cond ((eq? 'rectangular (type? z)) (angle-rect z))
-	((eq? 'polar (type? z)) (angle-polar z))))
+  (apply-generic 'angle z))
 
 (define (magnitude z)
-  (cond ((eq? 'rectangular (type? z)) (magnitude-rect z))
-	((eq? 'polar (type? z)) (magnitude-polar z))))
+  (apply-generic 'magnitude z))
 
-(define (type? z)
-  (car z))
+
+(define (apply-generic op z)
+  (let ((proc (get op (type z))))
+    (if proc
+      (apply proc (contents z))
+      (proc (contents z))
+      (display "no such operation installed for input"))))
+
+
+
+
 
 ;------------- test --------------
 (define z '(rectangular 1 1))
