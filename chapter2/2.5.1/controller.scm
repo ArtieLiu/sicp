@@ -29,3 +29,6 @@
 (get 'add (map type-tag (list a a)))
 (get 'add '(scheme-number scheme-number))
 
+(define z (make-complex-from-real-imag 1 1))
+z
+(magnitude z)
