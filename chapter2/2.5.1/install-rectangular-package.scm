@@ -1,6 +1,3 @@
-(load "put-get.scm")
-(load "tag.scm")
-
 (define (install-rectangular-package)
 
   ;; internal procedures

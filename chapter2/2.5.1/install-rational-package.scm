@@ -1,6 +1,3 @@
-(load "put-get.scm")
-(load "tag.scm")
-
 (define (install-rational-package)
   ;; internal procedures
   (define (numer x) (car x))

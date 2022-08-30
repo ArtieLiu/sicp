@@ -1,6 +1,3 @@
-(load "put-get.scm")
-(load "tag.scm")
-
 (define (install-scheme-number-package)
 
   ;; interface to rest of the system

@@ -1,6 +1,3 @@
-(load "tag.scm")
-(load "put-get.scm")
-
 (load "install-polar-package.scm")
 (load "install-rectangular-package.scm")
 

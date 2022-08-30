@@ -1,6 +1,3 @@
-(load "put-get.scm")
-(load "tag.scm")
-
 (define (install-polar-package)
   ;; internal procedures
   (define (magnitude z) (car z))
