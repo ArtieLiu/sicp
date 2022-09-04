@@ -17,3 +17,12 @@
 			"No method for these types" (list op type-tags))))))
 	    (error 
 	      "No method for these types" (list op type-tags)))))))
+
+(let ((types (map type-tag args)))
+  (map (map-to-type args) types))
+
+(define (map-to-type args)
+  (lambda (type)
+    (map get-coercion  )))
+
+
