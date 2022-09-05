@@ -17,33 +17,16 @@
 ; Show how to generalize apply-generic to handle coercion in the general case of multiple arguments. 
 ; One strategy is to attempt to coerce all the arguments to the type of the first argument, then to the type of the second argument, and so on. 
 
-;------------- apply-generic-* --------------
-(define (apply-generic-* op . args)
-  (let ((type-tags (map type-tag args)))
-    (let ((proc (get op type-tags)))
-      (if proc
-	(apply proc (map contents args))
-	(let ((args-of-unified-type (unify-types args)))
-	  (if (null? args-of-unified-type)
-	    (error "cannot unify types of the arguments")
-	    (display args-of-unified-type)))))))
-
-(apply-generic-* 'add z r r)
-(apply-generic-* 'add z z z)
-(unify-types (list r r z))
-
-
-;------------- remove duplicates --------------
-(define (remove-duplicates l)
-  (cond ((null? l) '())
-	((in? (car l) (cdr l)) (remove-duplicates (cdr l)))
-	(else (cons (car l) 
-		    (remove-duplicates (cdr l))))))
-(define (in? a lat)
-  (cond ((null? lat) #f)
-	((eq? a (car lat)) #t)
-	(else (in? a (cdr lat)))))
-;-------------------------------
+;------------- apply-generic --------------
+(define (apply-generic op . args)
+  (let ((args-of-unified-type (unify-types args)))
+    (if (null? args-of-unified-type)
+      (error "cannot unify types of the arguments")
+      (let ((type-tags (map type-tag args-of-unified-type)))
+	(let ((proc (get op type-tags)))
+	  (if proc
+	    (apply proc (map contents args-of-unified-type))
+	    (error "no operation found for type-tags: " type-tags)))))))
 
 ;------------- unify types --------------
 (define (unify-types args)
@@ -56,8 +39,7 @@
     (let ((converted (convert-args-to-type args (car types))))
       (if (null? converted)
 	(unify args (cdr types))
-	(cons converted 
-	      (unify args (cdr types)))))))
+	converted))))
 
 (define (convert-args-to-type args type)
   (define (convert-arg-to-type type)
@@ -77,6 +59,17 @@
   (cond ((null? l) #t)
 	((eq? #f (car l)) #f)
 	(else (ok? (cdr l)))))
+
+;------------- remove duplicates --------------
+(define (remove-duplicates l)
+  (define (in? a lat)
+    (cond ((null? lat) #f)
+	  ((eq? a (car lat)) #t)
+	  (else (in? a (cdr lat)))))
+  (cond ((null? l) '())
+	((in? (car l) (cdr l)) (remove-duplicates (cdr l)))
+	(else (cons (car l) 
+		    (remove-duplicates (cdr l))))))
 ;-------------------------------
 
 ;------------- testing --------------
@@ -84,12 +77,9 @@
 (define n (make-scheme-number 1))
 (define r (make-rational 1 2))
 
-(convert-args-to-type (list z n) 'complex)
-
-(define types (map type-tag (list z n)))
-(unify-types (list z n))
-(unify (list z n) '(complex scheme-number))
-
-(unify-types (list r r z))
-(unify-types (list r '(unknown 123) z))
+(apply-generic 'add z r r)
+(apply-generic 'add n n )
+(apply-generic 'add n r )
+(apply-generic 'add n z )
+(apply-generic 'add z z )
 ; ----------------------------------- 

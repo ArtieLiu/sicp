@@ -9,10 +9,15 @@
   (define (number->complex n)
     (let ((number (contents n)))
       (make-complex-from-real-imag number 0)))
+
+  (define (number->rational n)
+    (let ((num (contents n)))
+      (make-rational num 1)))
   ; (rational->complex (make-rational 1 2))
   ; (number->complex (make-scheme-number 1))
 
   (cond 
     ((and (eq? type1 'rational) (eq? type2 'complex)) rational->complex)
     ((and (eq? type1 'scheme-number) (eq? type2 'complex)) number->complex)
+    ((and (eq? type1 'scheme-number) (eq? type2 'rational)) number->rational)
     (else #f)))
