@@ -1,5 +1,6 @@
 (load "put-get.scm")
 (load "tag.scm")
+(load "coercion.scm")
 
 (load "install-scheme-number-package.scm")
 (load "install-rational-package.scm")
@@ -15,60 +16,39 @@
 
 ; Show how to generalize apply-generic to handle coercion in the general case of multiple arguments. 
 ; One strategy is to attempt to coerce all the arguments to the type of the first argument, then to the type of the second argument, and so on. 
-(define (apply-generic op . args)
-  (let ((type-tags (map type-tag args)))
-    (let ((proc (get op type-tags)))
-      (if proc
-	(apply proc (map contents args))
-	(if (= (length args) 2)
-	  (let ((type1 (car type-tags))
-		(type2 (cadr type-tags))
-		(a1 (car args))
-		(a2 (cadr args)))
-	    (let ((t1->t2 (get-coercion type1 type2))
-		  (t2->t1 (get-coercion type2 type1)))
-	      (cond (t1->t2 (apply-generic op (t1->t2 a1) a2))
-		    (t2->t1 (apply-generic op a1 (t2->t1 a2)))
-		    (else
-		      (error 
-			"No method for these types" (list op type-tags))))))
-	    (error 
-	      "No method for these types" (list op type-tags)))))))
 
-;------------- utilities --------------
-(define (get-coercion type1 type2) 
-
-  (define (rational->complex r)
-    (let ((num&denom (contents r)))
-      (let ((num (car num&denom))
-	    (denom (cdr num&denom)))
-	(make-complex-from-real-imag (/ num denom) 0))))
-
-  (define (number->complex n)
-    (let ((number (contents n)))
-      (make-complex-from-real-imag number 0)))
-  ; (rational->complex (make-rational 1 2))
-  ; (number->complex (make-scheme-number 1))
-
-  (cond 
-    ((and (eq? type1 'rational) (eq? type2 'complex)) rational->complex)
-    ((and (eq? type1 'scheme-number) (eq? type2 'complex)) number->complex)
-    (else #f)))
-;-------------------------------
-
-(define (apply-generic-multi op . args)
+;------------- apply-generic-* --------------
+(define (apply-generic-* op . args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
 	(apply proc (map contents args))
 	(let ((args-of-unified-type (unify-types args)))
 	  (if (null? args-of-unified-type)
-	    (error "no method found")
-	    (display "successfully converted")))))))
+	    (error "cannot unify types of the arguments")
+	    (display args-of-unified-type)))))))
 
-;------------- unify --------------
+(apply-generic-* 'add z r r)
+(apply-generic-* 'add z z z)
+(unify-types (list r r z))
+
+
+;------------- remove duplicates --------------
+(define (remove-duplicates l)
+  (cond ((null? l) '())
+	((in? (car l) (cdr l)) (remove-duplicates (cdr l)))
+	(else (cons (car l) 
+		    (remove-duplicates (cdr l))))))
+(define (in? a lat)
+  (cond ((null? lat) #f)
+	((eq? a (car lat)) #t)
+	(else (in? a (cdr lat)))))
+;-------------------------------
+
+;------------- unify types --------------
 (define (unify-types args)
-  (unify args (map type-tag args)))
+  (unify args 
+	 (remove-duplicates (map type-tag args))))
 
 (define (unify args types)
   (if (null? types) 
@@ -97,6 +77,7 @@
   (cond ((null? l) #t)
 	((eq? #f (car l)) #f)
 	(else (ok? (cdr l)))))
+;-------------------------------
 
 ;------------- testing --------------
 (define z (make-complex-from-real-imag 1 1))
