@@ -21,6 +21,7 @@
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
 (define (div x y) (apply-generic 'div x y))
+(define (negate x) (apply-generic 'negate x))
 
 ;------------- testing --------------
 (make-polynomial 'x (list '(2 2) '(1 1)))
@@ -39,3 +40,5 @@
 (add phybrid phybrid)
 (add px phybrid)
 (add py phybrid)
+
+(negate p1)

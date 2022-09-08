@@ -72,6 +72,25 @@
 			    (term-list p2)))
       (error "Polys not in same var: ADD-POLY" (list p1 p2))))
 
+  (define (sub-poly p1 p2)
+    (add-poly p1
+	      (negate p2)))
+
+  (define (negate p)
+    (make-poly (variable p)
+	       (negate-terms (term-list p))))
+
+  (define (negate-terms terms)
+    (if (empty-termlist? terms)
+      (the-empty-termlist)
+      (let ((t (first-term terms)))
+	(adjoin-term (negate-term t)
+		     (negate-terms (rest-terms terms))))))
+
+  (define (negate-term t)
+    (make-term (- (coeff t))
+	       (order t)))
+
   (define (mul-poly p1 p2)
     (if (same-variable? (variable p1)
 			(variable p2))
@@ -84,7 +103,10 @@
   (define (tag p) (attach-tag 'polynomial p))
 
   (put 'add  '(polynomial polynomial) (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'sub  '(polynomial polynomial) (lambda (p1 p2) (tag (sub-poly p1 p2))))
   (put 'mul  '(polynomial polynomial) (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'negate '(polynomial) (lambda (p) (tag (negate p))))
+
   (put 'make 'polynomial              (lambda (var terms) (tag (make-poly var terms))))
 
   'done)
