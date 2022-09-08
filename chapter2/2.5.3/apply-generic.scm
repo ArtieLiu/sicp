@@ -41,4 +41,11 @@
 (add px phybrid)
 (add py phybrid)
 
+(add p1 p1)
+(sub p1 p1)
+
 (negate p1)
+(add p1
+     (negate p1))
+
+(add p1 -p1)

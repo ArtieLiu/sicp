@@ -20,7 +20,7 @@
 
   (define (adjoin-term term termlist) 
     (if (=zero? (coeff term))
-      term-list
+      termlist
       (cons term termlist)))
 
   (define (=zero? coeff)
@@ -76,19 +76,18 @@
 	      (negate-poly p2)))
 
   (define (negate-poly p)
+    (define (negate-terms terms)
+      (if (empty-termlist? terms)
+	(the-empty-termlist)
+	(let ((t (first-term terms)))
+	  (adjoin-term (negate-term t)
+		       (negate-terms (rest-terms terms))))))
+    (define (negate-term t)
+      (make-term (negate (coeff t))
+		 (order t)))
+
     (make-poly (variable p)
 	       (negate-terms (term-list p))))
-
-  (define (negate-terms terms)
-    (if (empty-termlist? terms)
-      (the-empty-termlist)
-      (let ((t (first-term terms)))
-	(adjoin-term (negate-term t)
-		     (negate-terms (rest-terms terms))))))
-
-  (define (negate-term t)
-    (make-term (negate (coeff t))
-	       (order t)))
 
   (define (mul-poly p1 p2)
     (if (same-variable? (variable p1)
@@ -104,7 +103,7 @@
   (put 'add  '(polynomial polynomial) (lambda (p1 p2) (tag (add-poly p1 p2))))
   (put 'sub  '(polynomial polynomial) (lambda (p1 p2) (tag (sub-poly p1 p2))))
   (put 'mul  '(polynomial polynomial) (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  (put 'negate '(polynomial) (lambda (p) (tag (negate-poly p))))
+  (put 'negate '(polynomial)          (lambda (p) (tag (negate-poly p))))
 
   (put 'make 'polynomial              (lambda (var terms) (tag (make-poly var terms))))
 
