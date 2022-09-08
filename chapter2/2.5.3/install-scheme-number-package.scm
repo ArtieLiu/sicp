@@ -8,6 +8,9 @@
   (put 'sub '(scheme-number scheme-number) -)
   (put 'mul '(scheme-number scheme-number) *)
   (put 'div '(scheme-number scheme-number) /)
+
+  (put 'negate '(scheme-number) -)
+
   (put 'make 'scheme-number                (lambda (x) (tag x)))
 
 'done)

@@ -27,7 +27,6 @@
     (equal? coeff
 	    (add coeff coeff)))
 
-
   (define (add-terms L1 L2)
     (cond ((empty-termlist? L1) L2)
 	  ((empty-termlist? L2) L1)
@@ -74,9 +73,9 @@
 
   (define (sub-poly p1 p2)
     (add-poly p1
-	      (negate p2)))
+	      (negate-poly p2)))
 
-  (define (negate p)
+  (define (negate-poly p)
     (make-poly (variable p)
 	       (negate-terms (term-list p))))
 
@@ -88,7 +87,7 @@
 		     (negate-terms (rest-terms terms))))))
 
   (define (negate-term t)
-    (make-term (- (coeff t))
+    (make-term (negate (coeff t))
 	       (order t)))
 
   (define (mul-poly p1 p2)
@@ -105,7 +104,7 @@
   (put 'add  '(polynomial polynomial) (lambda (p1 p2) (tag (add-poly p1 p2))))
   (put 'sub  '(polynomial polynomial) (lambda (p1 p2) (tag (sub-poly p1 p2))))
   (put 'mul  '(polynomial polynomial) (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  (put 'negate '(polynomial) (lambda (p) (tag (negate p))))
+  (put 'negate '(polynomial) (lambda (p) (tag (negate-poly p))))
 
   (put 'make 'polynomial              (lambda (var terms) (tag (make-poly var terms))))
 
