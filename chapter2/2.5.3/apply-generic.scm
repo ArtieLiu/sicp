@@ -23,16 +23,8 @@
 (define (negate x) (apply-generic 'negate x))
 
 ;------------- testing --------------
-(define make-dense-polynomial (get 'make 'polynomial-dense))
-(define make-dense            (get 'make 'dense))
-
-(define P-dense1 (make-sparse-polynomial 'x (make-dense '(3 2 1 0))))
-
+(define P-dense (make-dense-polynomial 'x '(3 2 1 0)))
 (add P-dense1 P-dense1)
 
-(define make-sparse-polynomial (get 'make 'polynomial-sparse))
-(define make-sparse            (get 'make 'sparse))
-
-(define P-sparse1 (make-sparse-polynomial 'x 
-					  (make-sparse '((100 100) (10 10)))))
+(define P-sparse (make-sparse-polynomial 'x '((100 100) (10 10))))
 (add P-sparse1 P-sparse1)

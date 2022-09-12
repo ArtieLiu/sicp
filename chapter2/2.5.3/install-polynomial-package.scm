@@ -3,9 +3,7 @@
 
 (load "install-sparse-itemlist-package.scm")
 (load "install-dense-itemlist-package.scm")
-(load "install-scheme-number-package.scm" )
 
-(install-scheme-number-package)
 (install-sparse-itemlist-package)
 (install-dense-itemlist-package)
 
@@ -36,7 +34,9 @@
   (apply-generic 'add-terms termlist1 termlist2))
 
 (define (make-sparse-polynomial var sparse-items) 
-  ((get 'make 'polynomial-sparse) var sparse-items))
+  ((get 'make 'polynomial-sparse) var 
+				  ((get 'make 'sparse) sparse-items)))
 
 (define (make-dense-polynomial var dense-items)
-  ((get 'make 'polynomial-dense) var dense-items))
+  ((get 'make 'polynomial-dense) var 
+				 ((get 'make 'dense) dense-items)))
