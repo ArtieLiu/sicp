@@ -3,7 +3,6 @@
 (load "install-polynomial-package.scm")
 (load "install-scheme-number-package.scm")
 
-
 (install-polynomial-package)
 (install-scheme-number-package)
 
@@ -24,28 +23,16 @@
 (define (negate x) (apply-generic 'negate x))
 
 ;------------- testing --------------
-(make-polynomial 'x (list '(2 2) '(1 1)))
-(define l2 (list '(1 2) '(2 4)))
+(define make-dense-polynomial (get 'make 'polynomial-dense))
+(define make-dense            (get 'make 'dense))
 
-(define p1 (make-polynomial 'x (list '(2 2) '(1 1))))
-(define p2 (make-polynomial 'x (list '(3 3) '(2 2))))
+(define P-dense1 (make-sparse-polynomial 'x (make-dense '(3 2 1 0))))
 
-(add p1 p2)
-(mul p1 p2)
+(add P-dense1 P-dense1)
 
-(define py (make-polynomial 'y (list '(1 1))))
-(define px (make-polynomial 'x (list '(1 1))))
-(define phybrid (make-polynomial 'x (list (list py 1))))
+(define make-sparse-polynomial (get 'make 'polynomial-sparse))
+(define make-sparse            (get 'make 'sparse))
 
-(add phybrid phybrid)
-(add px phybrid)
-(add py phybrid)
-
-(add p1 p1)
-(sub p1 p1)
-
-(negate p1)
-(add p1
-     (negate p1))
-
-(add p1 -p1)
+(define P-sparse1 (make-sparse-polynomial 'x 
+					  (make-sparse '((100 100) (10 10)))))
+(add P-sparse1 P-sparse1)

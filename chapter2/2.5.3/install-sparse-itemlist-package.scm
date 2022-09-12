@@ -59,23 +59,3 @@
   'done)
 
 (install-sparse-itemlist-package)
-
-;------------- testing --------------
-(define (apply-generic op . args)
-  (let ((type-tags (map type-tag args)))
-    (let ((proc (get op type-tags)))
-      (if proc
-	(apply proc (map contents args))
-	(error
-	  "No method for these types: 
-	  APPLY-GENERIC"
-	  (list op type-tags))))))
-
-(define (add x y) (apply-generic 'add x y))
-(define make-sparse (get 'make 'sparse))
-
-(define L1 (make-sparse '((100 100) (10 10))))
-(define L2 (make-sparse '((1 1))))
-
-(apply-generic 'add-terms L1 L2)
-(define P3 (make-dense-polynomial 'x D1))

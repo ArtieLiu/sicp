@@ -40,37 +40,3 @@
 
 (define (make-dense-polynomial var dense-items)
   ((get 'make 'polynomial-dense) var dense-items))
-
-
-;------------- testing --------------
-(install-polynomial-package)
-
-(define (apply-generic op . args)
-  (let ((type-tags (map type-tag args)))
-    (let ((proc (get op type-tags)))
-      (if proc
-	(apply proc (map contents args))
-	(error
-	  "No method for these types: 
-	  APPLY-GENERIC"
-	  (list op type-tags))))))
-
-(define (add x y) (apply-generic 'add x y))
-;-------------  --------------
-
-(define make-sparse (get 'make 'sparse))
-
-(define L1 (make-sparse '((100 100) (10 10))))
-(define L2 (make-sparse '((1 1))))
-
-(define P1 (make-sparse-polynomial 'x L1)) 
-(define P2 (make-sparse-polynomial 'x L2)) 
-(add P1 P2)
-(add P1 P1)
-
-
-(define make-dense (get 'make 'dense))
-(define D1 (make-dense '( 3 2 1 0 )))
-(define P3 (make-dense-polynomial 'x D1))
-
-(add P3 P3)
