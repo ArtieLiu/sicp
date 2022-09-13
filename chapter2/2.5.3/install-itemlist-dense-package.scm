@@ -1,4 +1,4 @@
-(define (install-dense-itemlist-package)
+(define (install-itemlist-dense-package)
 
   (define (tag itemlist)
     (cons 'dense itemlist))
@@ -12,11 +12,11 @@
   (define (rest-terms itemlist)    (cdr itemlist))
 
   (define (empty-termlist? termlist) (null? termlist))
+  (define (the-empty-termlist) '())
 
   (define (make-term coeff order) (list coeff order))
   (define (coeff term) (car term))
   (define (order term) (cadr term))
-
 
   (define (adjoin-term compact-term termlist)
     (if (null? termlist) 
@@ -67,6 +67,40 @@
 			(add-terms (rest-terms L1) 
 				   (rest-terms L2)))))))))
 
+  (define (sub-terms L1 L2)
+    (add-terms L1 
+	       (negate-terms L2)))
+
+  (define negate -)
+  (define (negate-term t)
+    (make-term (negate (coeff t))
+	       (order t)))
+
+  (define (negate-terms terms)
+    (if (empty-termlist? terms)
+      (the-empty-termlist)
+      (let ((t (first-term terms)))
+	(adjoin-term (negate-term t)
+		     (negate-terms (rest-terms terms))))))
+
+  (define (mul-terms L1 L2)
+    (if (empty-termlist? L1)
+      (the-empty-termlist)
+      (add-terms 
+	(mul-term-by-all-terms (first-term L1) L2)
+	(mul-terms (rest-terms L1) L2))))
+
+  (define (mul-term-by-all-terms term L)
+    (if (empty-termlist? L)
+      (the-empty-termlist)
+      (let ((t2 (first-term L)))
+	(adjoin-term (make-term (mul (coeff term)
+				     (coeff t2))
+				(+ (order term)
+				   (order t2)))
+		     (mul-term-by-all-terms term 
+					    (rest-terms L))))))
+
   (put 'make 'dense 
        (lambda (itemlist) 
 	 (tag itemlist)))
@@ -78,5 +112,17 @@
   (put 'add-terms '(dense dense)
        (lambda (L1 L2)
 	 (tag (add-terms L1 L2))))
+
+  (put 'sub-terms '(dense dense)
+       (lambda (L1 L2)
+	 (tag (sub-terms L1 L2))))
+
+  (put 'negate-terms '(dense) 
+       (lambda (terms)
+	 (tag (negate-terms terms))))
+
+  (put 'mul-terms '(dense dense)
+       (lambda (L1 L2)
+	 (tag (mul-terms L1 L2))))
 
   'done)
