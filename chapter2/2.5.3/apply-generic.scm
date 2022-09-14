@@ -19,6 +19,7 @@
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
 (define (negate x) (apply-generic 'negate x))
 
 ;------------- testing --------------
@@ -32,3 +33,11 @@
 (add P-sparse P-sparse1)
 (sub P-sparse P-sparse1)
 (mul P-sparse P-sparse)
+
+(define P-dense-high (make-dense-polynomial 'x '(1 0 0 0 0 -1)))
+(define P-dense-low  (make-dense-polynomial 'x '(1 0 -1)))
+(div P-dense-high P-dense-low)
+
+(define P-dense-high (make-dense-polynomial 'x '()))
+(define P-dense-low  (make-dense-polynomial 'x '()))
+(div P-dense-high P-dense-low)

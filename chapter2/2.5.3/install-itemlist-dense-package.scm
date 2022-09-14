@@ -101,6 +101,26 @@
 		     (mul-term-by-all-terms term 
 					    (rest-terms L))))))
 
+  (define (div-terms L1 L2)
+    (if (empty-termlist? L1)
+      (list (the-empty-termlist) (the-empty-termlist))
+      (let ((t1 (first-term L1))
+	    (t2 (first-term L2)))
+	(if (> (order t2) (order t1))
+	  (list (the-empty-termlist) L1)
+	  (let ((new-c (/ (coeff t1) (coeff t2)))
+		(new-o (- (order t1) (order t2))))
+	    (let ((rest-of-result
+		    (sub-terms L1
+			       (mul-term-by-all-terms (make-term new-c new-o)
+						      L2))))
+	      (list (adjoin-term (make-term new-c new-o)
+				 (get-result (div-terms rest-of-result L2)))
+		    'remainder)))))))
+
+  (define get-result car)
+  (define get-remainder cadr)
+
   (put 'make 'dense 
        (lambda (itemlist) 
 	 (tag itemlist)))
@@ -124,5 +144,9 @@
   (put 'mul-terms '(dense dense)
        (lambda (L1 L2)
 	 (tag (mul-terms L1 L2))))
+
+  (put 'div-terms '(dense dense)
+       (lambda (L1 L2)
+	 (tag (div-terms L1 L2))))
 
   'done)
