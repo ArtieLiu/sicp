@@ -13,25 +13,30 @@
 (define (the-empty-termlist) '())
 
 (define (make-term coeff order) (list coeff order))
-(define (coeff term) (car term))
-(define (order term) (cadr term))
+
+(define (coeff compact-term) (car compact-term))
+(define (order compact-term) (cadr compact-term))
+
+(define (=zero? compact-term)
+  (= 0 
+     (coeff compact-term)))
 
 (define (adjoin-term compact-term termlist)
-  (if (null? termlist) 
-    (expand compact-term)
-    (let ((o1 (order compact-term))
-	  (o2 (order (first-term termlist))))
-      (cond ((= o1 o2)
-	     (cons (+ (coeff compact-term)
-			(coeff (first-term termlist)))
-		   (cdr termlist)))
-	    ((< o1 o2)
-	     (cons (coeff (first-term termlist))
-		   (adjoin-term compact-term
-				(cdr termlist))))
-	    ((> o1 o2)
-	     (adjoin-term compact-term
-			  (raise-order termlist)))))))
+  (cond ((=zero? compact-term) termlist)
+	((null? termlist) (expand compact-term))
+	(else (let ((o1 (order compact-term))
+		    (o2 (order (first-term termlist))))
+		(cond ((= o1 o2)
+		       (cons (+ (coeff compact-term)
+				(coeff (first-term termlist)))
+			     (cdr termlist)))
+		      ((< o1 o2)
+		       (cons (coeff (first-term termlist))
+			     (adjoin-term compact-term
+					  (cdr termlist))))
+		      ((> o1 o2)
+		       (adjoin-term compact-term
+				    (raise-order termlist))))))))
 
 (define (raise-order termlist)
   (cons 0 termlist))
@@ -114,7 +119,7 @@
 						    L2))))
 	    (list (adjoin-term (make-term new-c new-o)
 			       (get-result (div-terms rest-of-result L2)))
-		  'remainder)))))))
+		  (get-remainder (div-terms rest-of-result L2)))))))))
 
 (define get-result car)
 (define get-remainder cadr)
@@ -123,3 +128,17 @@
 (add-terms dense-terms dense-terms)
 (sub-terms dense-terms dense-terms)
 (mul-terms dense-terms dense-terms)
+
+(define L1 '(1 0 0 0 0 -1) )
+(define L2 '(1 0 -1))
+
+(define t1 (first-term L1))
+(define t2 (first-term L2))
+
+(define new-c (/ (coeff t1) (coeff t2)))
+(define new-o (- (order t1) (order t2)))
+
+(div-terms L1 L2)
+(sub-terms L1
+	   (mul-term-by-all-terms (make-term new-c new-o)
+				  L2))
