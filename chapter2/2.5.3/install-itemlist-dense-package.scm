@@ -1,9 +1,4 @@
-; (load "install-term-package.scm")
-; (install-term-package)
-
 (define (install-itemlist-dense-package)
-
-  (define (empty-termlist? L) (null? L))
 
   (define (make-termlist itemlist) (list itemlist))
   (define (first-term L) 
@@ -11,6 +6,8 @@
 	  (coeff (car L)))
       (list coeff order)))
   (define (rest-terms itemlist)    (cdr itemlist))
+
+  (define (empty-termlist? L) (null? L))
 
   (define (make-term coeff order) (list coeff order))
   (define (coeff term) (car term))
@@ -74,7 +71,26 @@
 
   'done)
 
-(define add +)
-; (define (make-term coeff order) (apply-generic 'make-term coeff order))
-; (define (coeff term) (apply-generic 'coeff term))
-; (define (order term) (apply-generic 'order term))
+; ----------------- test ----------------- 
+; (load "tag.scm")
+; (load "put-get.scm")
+; (define add + )
+
+; (define (apply-generic op . args)
+;   (let ((type-tags (map type-tag args)))
+;     (let ((proc (get op type-tags)))
+;       (if proc
+; 	(apply proc (map contents args))
+; 	(error
+; 	  "No method for these types: 
+; 	  APPLY-GENERIC"
+; 	  (list op type-tags))))))
+
+; (install-itemlist-dense-package)
+
+; (define L '(termlist-dense 3 2 1 0))
+; (apply-generic 'first-term L)
+; (apply-generic 'rest-terms L)
+; (apply-generic 'adjoin-term '(term 1 0) L)
+; (apply-generic 'adjoin-term '(term 3 3) L)
+; (apply-generic 'adjoin-term '(term 4 4) L)

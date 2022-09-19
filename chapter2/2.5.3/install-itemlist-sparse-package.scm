@@ -1,6 +1,4 @@
 (define (install-itemlist-sparse-package)
-  (define (tag itemlist)
-    (cons 'sparse itemlist))
 
   (define (make-termlist itemlist) (list itemlist))
   (define (first-term itemlist)    (car itemlist))
@@ -17,39 +15,35 @@
     (if (=zero? (coeff term))
       termlist
       (cons term termlist)))
+
   (define (=zero? coeff)
     (equal? coeff
 	    (add coeff coeff)))
 
-  (define (add-terms L1 L2)
-    (cond ((empty-termlist? L1) L2)
-	  ((empty-termlist? L2) L1)
-	  (else
-	    (let ((t1 (first-term L1)) 
-		  (t2 (first-term L2)))
-	      (cond ((> (order t1) (order t2))
-		     (adjoin-term t1 
-				  (add-terms (rest-terms L1) L2)))
-		    ((< (order t1) (order t2)) 
-		     (adjoin-term t2 
-				  (add-terms L1 (rest-terms L2))))
-		    (else
-		      (adjoin-term
-			(make-term (add (coeff t1) (coeff t2)) 
-				   (order t1))
-			(add-terms (rest-terms L1) 
-				   (rest-terms L2)))))))))
+  (define (tag-list termlist) (cons 'termlist-sparse termlist))
+  (define (tag-term term) (cons 'term term))
 
-  (put 'make 'sparse 
-       (lambda (itemlist) 
-	 (tag itemlist)))
-
-  (put 'adjoin 'sparse 
+  (put 'adjoin-term '(term termlist-sparse)
        (lambda (term termlist) 
-	 (tag (adjoin-term term termlist))))
+	 (tag-list (adjoin-term term termlist))))
 
-  (put 'add-terms '(sparse sparse)
-       (lambda (L1 L2)
-	 (tag (add-terms L1 L2))))
+  (put 'empty-termlist? '(termlist-sparse)
+       (lambda (L)
+	 (empty-termlist? L)))
+
+  (put 'rest-terms '(termlist-sparse)
+       (lambda (termlist)
+	 (tag-list (rest-terms termlist))))
+
+  (put 'first-term '(termlist-sparse)
+       (lambda (termlist)
+	 (tag-term (first-term termlist))))
+
+  (put 'make-term '(scheme-number scheme-number)
+       (lambda (coeff order)
+	 (tag-term (make-term coeff order))))
+
+  (put 'coeff '(term) (lambda (term) (coeff term)))
+  (put 'order '(term) (lambda (term) (order term)))
 
   'done)

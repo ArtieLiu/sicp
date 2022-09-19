@@ -2,7 +2,10 @@
 (load "put-get.scm")
 
 (load "install-itemlist-dense-package.scm")
+(load "install-itemlist-sparse-package.scm")
+
 (install-itemlist-dense-package)
+(install-itemlist-sparse-package)
 
 (define (install-termlist-operations-package)
 
@@ -24,6 +27,7 @@
 				   (order t1))
 			(add-terms (rest-terms L1) 
 				   (rest-terms L2)))))))))
+
   (define (tag termlist)
     (cons 'termlist termlist))
 
@@ -56,12 +60,16 @@
 	  (list op type-tags))))))
 (define add +)
 
-(define L0 (cons 'termlist (cons 'termlist-dense '())))
-(define L1 (cons 'termlist (cons 'termlist-dense '(3 2 1 0))))
-(define L2 (cons 'termlist (cons 'termlist-dense '(2 1 0))))
+; (define L0 (cons 'termlist (cons 'termlist-dense '())))
+; (define L1 (cons 'termlist (cons 'termlist-dense '(3 2 1 0))))
+; (define L2 (cons 'termlist (cons 'termlist-dense '(2 1 0))))
+
+(define L0 (cons 'termlist (cons 'termlist-sparse '())))
+(define L1 (cons 'termlist (cons 'termlist-sparse '((2 2)(0 0)))))
+(define L2 (cons 'termlist (cons 'termlist-sparse '((3 3)))))
 
 (apply-generic 'add-terms L0 L0)
 (apply-generic 'add-terms L1 L0)
-(apply-generic 'add-terms L1 L2)
 (apply-generic 'add-terms L1 L1)
+(apply-generic 'add-terms L1 L2)
 (apply-generic 'add-terms L2 L2)
