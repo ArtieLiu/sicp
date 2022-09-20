@@ -46,4 +46,10 @@
   (put 'coeff '(term) (lambda (term) (coeff term)))
   (put 'order '(term) (lambda (term) (order term)))
 
+  (put 'make 'termlist-sparse 
+       (lambda (termlist)
+	 (tag-list termlist)))
+
   'done)
+
+(define (make-termlist-sparse termlist) ((get 'make 'termlist-sparse) termlist))

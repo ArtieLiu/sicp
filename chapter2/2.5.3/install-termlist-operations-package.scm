@@ -1,6 +1,3 @@
-(load "tag.scm")
-(load "put-get.scm")
-
 (load "install-itemlist-dense-package.scm")
 (load "install-itemlist-sparse-package.scm")
 
@@ -33,7 +30,12 @@
 
   (put 'add-terms '(termlist termlist)
        (lambda (L1 L2)
-	 (tag (add-terms L1 L2)))))
+	 (tag (add-terms L1 L2))))
+
+  (put 'make 'termlist 
+       (lambda (termlist)
+	 (tag termlist)))
+  'done)
 
 
 (define (make-term coeff order) (apply-generic 'make-term coeff order))
@@ -45,31 +47,5 @@
 (define (rest-terms L) (apply-generic 'rest-terms L))
 (define (adjoin-term term termlist) (apply-generic 'adjoin-term term termlist))
 
-
-; ------------- testing ----------
-(install-termlist-operations-package)
-
-(define (apply-generic op . args)
-  (let ((type-tags (map type-tag args)))
-    (let ((proc (get op type-tags)))
-      (if proc
-	(apply proc (map contents args))
-	(error
-	  "No method for these types: 
-	  APPLY-GENERIC"
-	  (list op type-tags))))))
+(define (make-termlist termlist) ((get 'make 'termlist) termlist))
 (define add +)
-
-; (define L0 (cons 'termlist (cons 'termlist-dense '())))
-; (define L1 (cons 'termlist (cons 'termlist-dense '(3 2 1 0))))
-; (define L2 (cons 'termlist (cons 'termlist-dense '(2 1 0))))
-
-(define L0 (cons 'termlist (cons 'termlist-sparse '())))
-(define L1 (cons 'termlist (cons 'termlist-sparse '((2 2)(0 0)))))
-(define L2 (cons 'termlist (cons 'termlist-sparse '((3 3)))))
-
-(apply-generic 'add-terms L0 L0)
-(apply-generic 'add-terms L1 L0)
-(apply-generic 'add-terms L1 L1)
-(apply-generic 'add-terms L1 L2)
-(apply-generic 'add-terms L2 L2)

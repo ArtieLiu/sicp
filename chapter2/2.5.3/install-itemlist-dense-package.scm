@@ -69,6 +69,9 @@
   (put 'coeff '(term) (lambda (term) (coeff term)))
   (put 'order '(term) (lambda (term) (order term)))
 
+  (put 'make 'dense
+       (lambda (termlist)
+	 (tag-list (make-termlist termlist))))
   'done)
 
 ; ----------------- test ----------------- 
