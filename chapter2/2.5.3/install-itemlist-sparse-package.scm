@@ -50,6 +50,10 @@
        (lambda (termlist)
 	 (tag-list termlist)))
 
+  (put 'the-empty-termlist '(termlist-sparse) 
+       (lambda (termlist)
+	 (tag-list '())))
+
   'done)
 
 (define (make-termlist-sparse termlist) ((get 'make 'termlist-sparse) termlist))

@@ -25,12 +25,28 @@
 			(add-terms (rest-terms L1) 
 				   (rest-terms L2)))))))))
 
+  (define (sub-terms L1 L2)
+    (add-terms L1
+	       (negate-terms L2)))
+
+  (define negate -)
+  (define (negate-term t)
+    (make-term (negate (coeff t))
+	       (order t)))
+
+  (define (negate-terms terms)
+    (if (empty-termlist? terms)
+      (the-empty-termlist terms)
+      (let ((t (first-term terms)))
+	(adjoin-term (negate-term t)
+		     (negate-terms (rest-terms terms))))))
+
   (define (tag termlist)
     (cons 'termlist termlist))
 
-  (put 'add-terms '(termlist termlist)
-       (lambda (L1 L2)
-	 (tag (add-terms L1 L2))))
+  (put 'add-terms '(termlist termlist) (lambda (L1 L2) (tag (add-terms L1 L2))))
+  (put 'sub-terms '(termlist termlist) (lambda (L1 L2) (tag (sub-terms L1 L2))))
+  (put 'negate-terms '(termlist) (lambda (L1) (tag (negate-terms L1))))
 
   (put 'make 'termlist 
        (lambda (termlist)
@@ -48,3 +64,6 @@
 (define (adjoin-term term termlist) (apply-generic 'adjoin-term term termlist))
 
 (define (make-termlist termlist) ((get 'make 'termlist) termlist))
+
+(define (the-empty-termlist termlist) 
+  (apply-generic 'the-empty-termlist termlist))

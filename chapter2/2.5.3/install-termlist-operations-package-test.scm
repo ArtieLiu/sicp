@@ -6,9 +6,6 @@
 (install-termlist-operations-package)
 
 (define (apply-generic op . args)
-  (display op) (newline)
-  (display args) (newline)
-  (newline)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
@@ -31,6 +28,14 @@
 (apply-generic 'add-terms L1 L2)
 (apply-generic 'add-terms L2 L2)
 
+(apply-generic 'negate-terms L1)
+
+(apply-generic 'sub-terms L0 L0)
+(apply-generic 'sub-terms L1 L0)
+(apply-generic 'sub-terms L1 L1)
+(apply-generic 'sub-terms L1 L2)
+(apply-generic 'sub-terms L2 L2)
+
 ; ----------------- dense ----------------- 
 (define L3 (make-termlist (make-termlist-dense '())))
 (define L4 (make-termlist (make-termlist-dense '(1))))
@@ -41,3 +46,11 @@
 (apply-generic 'add-terms L4 L4)
 (apply-generic 'add-terms L4 L5)
 (apply-generic 'add-terms L5 L5)
+
+(apply-generic 'negate-terms L5)
+
+(apply-generic 'sub-terms L3 L3)
+(apply-generic 'sub-terms L4 L3)
+(apply-generic 'sub-terms L4 L4)
+(apply-generic 'sub-terms L4 L5)
+(apply-generic 'sub-terms L5 L5)

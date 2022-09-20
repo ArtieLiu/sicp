@@ -72,30 +72,12 @@
   (put 'make 'termlist-dense
        (lambda (termlist)
 	 (tag-list termlist)))
+
+  (put 'the-empty-termlist '(termlist-dense) 
+       (lambda (termlist)
+	 (tag-list '())))
+
   'done)
 
 (define (make-termlist-dense termlist) ((get 'make 'termlist-dense) termlist))
 
-; ----------------- test ----------------- 
-; (load "tag.scm")
-; (load "put-get.scm")
-; (define add + )
-
-; (define (apply-generic op . args)
-;   (let ((type-tags (map type-tag args)))
-;     (let ((proc (get op type-tags)))
-;       (if proc
-; 	(apply proc (map contents args))
-; 	(error
-; 	  "No method for these types: 
-; 	  APPLY-GENERIC"
-; 	  (list op type-tags))))))
-
-; (install-itemlist-dense-package)
-
-; (define L '(termlist-dense 3 2 1 0))
-; (apply-generic 'first-term L)
-; (apply-generic 'rest-terms L)
-; (apply-generic 'adjoin-term '(term 1 0) L)
-; (apply-generic 'adjoin-term '(term 3 3) L)
-; (apply-generic 'adjoin-term '(term 4 4) L)
