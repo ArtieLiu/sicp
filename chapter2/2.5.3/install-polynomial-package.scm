@@ -32,3 +32,6 @@
 
 (define (make-sparse-polynomial var sparse-termlist) 
   (make-polynomial var (make-termlist (make-termlist-sparse sparse-termlist))))
+
+(define (make-dense-polynomial var dense-termlist) 
+  (make-polynomial var (make-termlist (make-termlist-dense dense-termlist))))

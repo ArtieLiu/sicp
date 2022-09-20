@@ -69,10 +69,12 @@
   (put 'coeff '(term) (lambda (term) (coeff term)))
   (put 'order '(term) (lambda (term) (order term)))
 
-  (put 'make 'dense
+  (put 'make 'termlist-dense
        (lambda (termlist)
-	 (tag-list (make-termlist termlist))))
+	 (tag-list termlist)))
   'done)
+
+(define (make-termlist-dense termlist) ((get 'make 'termlist-dense) termlist))
 
 ; ----------------- test ----------------- 
 ; (load "tag.scm")

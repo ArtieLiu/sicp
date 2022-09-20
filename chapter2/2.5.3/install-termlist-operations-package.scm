@@ -48,4 +48,3 @@
 (define (adjoin-term term termlist) (apply-generic 'adjoin-term term termlist))
 
 (define (make-termlist termlist) ((get 'make 'termlist) termlist))
-(define add +)
