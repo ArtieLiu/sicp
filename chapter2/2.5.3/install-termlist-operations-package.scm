@@ -41,11 +41,29 @@
 	(adjoin-term (negate-term t)
 		     (negate-terms (rest-terms terms))))))
 
+  (define (mul-terms L1 L2)
+    (if (empty-termlist? L1)
+      (the-empty-termlist L1)
+      (add-terms 
+	(mul-term-by-all-terms (first-term L1) L2)
+	(mul-terms (rest-terms L1) L2))))
+
+  (define (mul-term-by-all-terms term L)
+    (if (empty-termlist? L)
+      (the-empty-termlist L)
+      (let ((t2 (first-term L)))
+	(adjoin-term (make-term (mul (coeff term)
+				     (coeff t2))
+				(+ (order term)
+				   (order t2)))
+		     (mul-term-by-all-terms term 
+					    (rest-terms L))))))
   (define (tag termlist)
     (cons 'termlist termlist))
 
   (put 'add-terms '(termlist termlist) (lambda (L1 L2) (tag (add-terms L1 L2))))
   (put 'sub-terms '(termlist termlist) (lambda (L1 L2) (tag (sub-terms L1 L2))))
+  (put 'mul-terms '(termlist termlist) (lambda (L1 L2) (tag (mul-terms L1 L2))))
   (put 'negate-terms '(termlist) (lambda (L1) (tag (negate-terms L1))))
 
   (put 'make 'termlist 

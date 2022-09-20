@@ -36,6 +36,10 @@
 (apply-generic 'sub-terms L1 L2)
 (apply-generic 'sub-terms L2 L2)
 
+(define mul *)
+(apply-generic 'mul-terms L1 L2)
+(apply-generic 'mul-terms L2 L2)
+
 ; ----------------- dense ----------------- 
 (define L3 (make-termlist (make-termlist-dense '())))
 (define L4 (make-termlist (make-termlist-dense '(1))))
