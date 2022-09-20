@@ -6,9 +6,6 @@
 (install-termlist-operations-package)
 
 (define (apply-generic op . args)
-  (display "op: ") (display op) (newline)
-  (display "args: ") (display args) (newline)
-  (newline)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
@@ -24,9 +21,6 @@
 (define L0 (make-termlist (make-termlist-sparse '())))
 (define L1 (make-termlist (make-termlist-sparse '((2 2)(0 0)))))
 (define L2 (make-termlist (make-termlist-sparse '((3 3)))))
-(display L0) (newline)
-(display L1) (newline)
-(display L2) (newline)
 
 (apply-generic 'add-terms L0 L0)
 (apply-generic 'add-terms L1 L0)
