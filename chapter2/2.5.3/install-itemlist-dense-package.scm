@@ -5,7 +5,16 @@
     (let ((order (length (cdr L)))
 	  (coeff (car L)))
       (list coeff order)))
-  (define (rest-terms itemlist)    (cdr itemlist))
+
+  ; (define (rest-terms itemlist) (cdr itemlist))
+
+  (define (rest-terms itemlist)
+    (let ((rests (cdr itemlist)))
+      (if (empty-termlist? rests)
+	'()
+	(if (= 0 (car rests))
+	  (rest-terms rests)
+	  rests))))
 
   (define (empty-termlist? L) (null? L))
 
@@ -14,21 +23,23 @@
   (define (order term) (cadr term))
 
   (define (adjoin-term compact-term termlist)
-    (if (null? termlist) 
-      (expand compact-term)
-      (let ((o1 (order compact-term))
-	    (o2 (order (first-term termlist))))
-	(cond ((= o1 o2)
-	       (cons (add (coeff compact-term)
-			  (coeff (first-term termlist)))
-		     (cdr termlist)))
-	      ((< o1 o2)
-	       (cons (coeff (first-term termlist))
-		     (adjoin-term compact-term
-				  (cdr termlist))))
-	      ((> o1 o2)
-	       (adjoin-term compact-term
-			    (raise-order termlist)))))))
+    (if (= 0 (coeff compact-term))
+      termlist
+      (if (null? termlist) 
+	(expand compact-term)
+	(let ((o1 (order compact-term))
+	      (o2 (order (first-term termlist))))
+	  (cond ((= o1 o2)
+		 (cons (add (coeff compact-term)
+			    (coeff (first-term termlist)))
+		       (cdr termlist)))
+		((< o1 o2)
+		 (cons (coeff (first-term termlist))
+		       (adjoin-term compact-term
+				    (cdr termlist))))
+		((> o1 o2)
+		 (adjoin-term compact-term
+			      (raise-order termlist))))))))
 
   (define (raise-order termlist)
     (cons 0 termlist))

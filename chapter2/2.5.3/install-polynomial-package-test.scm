@@ -17,11 +17,14 @@
 	  (list op type-tags))))))
 
 
+(define add + )
+(define mul * )
 (define ls1 (make-sparse-polynomial 'x '((2 2) (1 1))))
 (define ls2 (make-sparse-polynomial 'x '((1 1))))
 (apply-generic 'add ls1 ls2)
 (apply-generic 'sub ls1 ls2)
 (apply-generic 'mul ls1 ls2)
+(apply-generic 'div ls1 ls2)
 
 
 (define ld1 (make-dense-polynomial 'x '(2 1 0)))
@@ -30,3 +33,4 @@
 (apply-generic 'add ld1 ld2)
 (apply-generic 'sub ld1 ld2)
 (apply-generic 'mul ld1 ld2)
+(apply-generic 'div ld1 ld2)

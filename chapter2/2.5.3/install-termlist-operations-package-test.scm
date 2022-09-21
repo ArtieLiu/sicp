@@ -16,6 +16,8 @@
 	  (list op type-tags))))))
 
 (define add +)
+(define mul *)
+(define sub -)
 
 ; ----------------- sparse ----------------- 
 (define L0 (make-termlist (make-termlist-sparse '())))
@@ -36,9 +38,12 @@
 (apply-generic 'sub-terms L1 L2)
 (apply-generic 'sub-terms L2 L2)
 
-(define mul *)
 (apply-generic 'mul-terms L1 L2)
 (apply-generic 'mul-terms L2 L2)
+
+(define Ls1 (make-termlist (make-termlist-sparse '((1 5) (-1 0)))))
+(define Ls2 (make-termlist (make-termlist-sparse '((1 2) (-1 0)))))
+(apply-generic 'div-terms Ls1 Ls2)
 
 ; ----------------- dense ----------------- 
 (define L3 (make-termlist (make-termlist-dense '())))
@@ -58,3 +63,10 @@
 (apply-generic 'sub-terms L4 L4)
 (apply-generic 'sub-terms L4 L5)
 (apply-generic 'sub-terms L5 L5)
+
+(apply-generic 'mul-terms L4 L5)
+(apply-generic 'mul-terms L5 L5)
+
+(define Ldn (make-termlist (make-termlist-dense '(1 0 0 0 0 -1))))
+(define Ldd (make-termlist (make-termlist-dense '(1 0 -1))))
+(apply-generic 'div-terms Ldn Ldd)

@@ -58,12 +58,34 @@
 				   (order t2)))
 		     (mul-term-by-all-terms term 
 					    (rest-terms L))))))
+
+  (define (div-terms L1 L2)
+    (if (empty-termlist? L1)
+      (list (the-empty-termlist L1) (the-empty-termlist L2))
+      (let ((t1 (first-term L1))
+	    (t2 (first-term L2)))
+	(if (> (order t2) (order t1))
+	  (list (the-empty-termlist L1) L1)
+	  (let ((new-c (/ (coeff t1) (coeff t2)))
+		(new-o (- (order t1) (order t2))))
+	    (let ((rest-of-result
+		    (sub-terms L1
+			       (mul-term-by-all-terms (make-term new-c new-o) L2))))
+	      (list (adjoin-term (make-term new-c new-o)
+				 (get-result (div-terms rest-of-result L2)))
+		    (get-remainder (div-terms rest-of-result L2)))))))))
+
+  
+  (define get-result car)
+  (define get-remainder cadr)
+
   (define (tag termlist)
     (cons 'termlist termlist))
 
   (put 'add-terms '(termlist termlist) (lambda (L1 L2) (tag (add-terms L1 L2))))
   (put 'sub-terms '(termlist termlist) (lambda (L1 L2) (tag (sub-terms L1 L2))))
   (put 'mul-terms '(termlist termlist) (lambda (L1 L2) (tag (mul-terms L1 L2))))
+  (put 'div-terms '(termlist termlist) (lambda (L1 L2) (tag (div-terms L1 L2))))
   (put 'negate-terms '(termlist) (lambda (L1) (tag (negate-terms L1))))
 
   (put 'make 'termlist 
