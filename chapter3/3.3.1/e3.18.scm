@@ -19,15 +19,13 @@
   (tracked?-iter l tracked))
 
 
-(define (count-pairs x)
-  (cond ((not (pair? x)) 0)
-	((tracked? x) 0)
+(define (has-cycle? x)
+  (cond ((not (pair? x)) #f)
+	((tracked? x) #t)
 	(else (track x)
-	      (+ (count-pairs (car x))
-		 (count-pairs (cdr x))
-		 1))))
-
+	      (or (has-cycle? (car x))
+		   (has-cycle? (cdr x))))))
 
 (define l '(1 2 3))
 (set-cdr! (cdr (cdr l)) l)
-(count-pairs l)
+(has-cycle? l)
