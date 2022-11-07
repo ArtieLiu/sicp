@@ -1,3 +1,9 @@
+(load "connector.scm")
+(load "adder.scm")
+(load "constant.scm")
+(load "multiplier.scm")
+(load "probe.scm")
+
 (define (celsius-fahrenheit-converter c f)
   (let ((u (make-connector))
         (v (make-connector))
