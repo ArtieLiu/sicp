@@ -1,0 +1,2 @@
+Exchange amounts in accounts is based on the current value in the accounts. This process cannot be broken up and be carried out one by one.
+Transfer between accounts can be broken up into pairs of transfering between two accounts, even if computed one pair after another, the finnal result remains the same.
