@@ -37,6 +37,9 @@
        (apply stream-map
               (cons proc (map stream-cdr argstreams))))))
 
+(define (add-streams s1 s2) 
+  (stream-map + s1 s2))
+
 (define (stream-enumerate-interval low high)
   (if (> low high)
       the-empty-stream
